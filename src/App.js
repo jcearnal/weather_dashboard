@@ -6,9 +6,7 @@ function App() {
   // console.log('API Key from .env:', process.env.REACT_APP_OPENWEATHERMAP_API_KEY);
 
   return (
-    <div className="App">
-      <header className="App-header">
-      </header>
+    <div className="App">      
       <WeatherDisplay lat="40.7128" lon="-74.0060" /> {/* Example coordinates for New York */}
     </div>
   );

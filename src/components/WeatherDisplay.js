@@ -1,98 +1,84 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import SearchComponent from './SearchComponent';
+import CurrentWeather from './CurrentWeather';
+import ForecastComponent from './ForecastComponent';
 import { fetchWeatherData } from '../api/weatherService';
-import { fetchGeocodeData } from '../api/geocodeService';
+import { fetchGeocodeData, fetchReverseGeocodeData } from '../api/geocodeService';
 
 const WeatherDisplay = () => {
   const [weatherData, setWeatherData] = useState(null);
   const [locationQuery, setLocationQuery] = useState('');
-  const [locationInfo, setLocationInfo] = useState({ name: '', state: '', country: '' });
+  const [locationInfo, setLocationInfo] = useState({ name: 'Unknown', state: 'Location', country: '' });
   const [error, setError] = useState('');
 
   const fetchDataByLocation = async (query) => {
     setError('');
     try {
-      const fullQuery = query.includes(',') ? query : `${query},,US`; // Adds default country if not included
-      const geoData = await fetchGeocodeData(fullQuery);
-      if (geoData && geoData.length > 0) {
-        const { name, state, country, lat, lon } = geoData[0];
-        setLocationInfo({ 
-          name: name || 'Unknown City', 
-          state: state || 'Unknown State', 
-          country: country || 'US'  // Default to US if country is not found
-        });
-        const weather = await fetchWeatherData(lat, lon);
-        setWeatherData(weather);
+      const geocodeData = await fetchGeocodeData(query);
+      if (geocodeData && geocodeData.length > 0) {
+        updateWeatherAndLocation(geocodeData[0].lat, geocodeData[0].lon, geocodeData[0]);
       } else {
         setError('Location not found.');
       }
     } catch (error) {
+      console.error('Failed to fetch location data:', error);
       setError('Failed to fetch location data.');
-      console.error(error);
     }
   };
 
-  const handleSearch = () => {
-    fetchDataByLocation(locationQuery);
+  const handleSearch = (query) => {
+    fetchDataByLocation(query);
+  };
+
+  const handleUseCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        updateWeatherAndLocation(position.coords.latitude, position.coords.longitude);
+      }, (err) => {
+        console.error(err);
+        setError("Failed to fetch location. Please ensure location services are enabled.");
+      });
+    } else {
+      setError("Geolocation is not supported by this browser.");
+    }
+  };
+
+  const updateWeatherAndLocation = async (lat, lon, geocodeData = null) => {
+    try {
+      const weather = await fetchWeatherData(lat, lon);
+      setWeatherData(weather);
+      if (geocodeData) { // If geocode data is directly provided from the search
+        setLocationInfo({
+          name: geocodeData.name,
+          state: geocodeData.state || 'Unknown State',
+          country: geocodeData.country
+        });
+      } else { // Otherwise, fetch new location details via reverse geocoding
+        const locationDetails = await fetchReverseGeocodeData(lat, lon);
+        setLocationInfo({
+          name: locationDetails.name,
+          state: locationDetails.state || 'Unknown State',
+          country: locationDetails.country
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching weather and location details:", error);
+      setError("Failed to fetch weather and location details.");
+    }
   };
 
   return (
     <div className="max-w-2xl mx-auto p-4">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold my-2">Weather Dashboard</h1>
-        <div className="my-4">
-          <input
-            type="text"
-            value={locationQuery}
-            onChange={(e) => setLocationQuery(e.target.value)}
-            placeholder="Enter City, State, Country"
-            className="border-2 border-gray-300 p-2 rounded"
-          />
-          <button onClick={handleSearch} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Go
-          </button>
-        </div>
-      </div>
-
+      <center><h1 className="text-3xl font-bold my-2">Weather Dashboard</h1></center>
+      <SearchComponent
+        onSearch={handleSearch}
+        locationQuery={locationQuery}
+        setLocationQuery={setLocationQuery}
+        onUseCurrentLocation={handleUseCurrentLocation}
+      />
       {error && <p className="text-red-500">{error}</p>}
-
-      {weatherData ? (
-        <div>
-          <h2 className="text-xl font-semibold text-center mb-4">Current Weather for {locationInfo.name}, {locationInfo.state}, {locationInfo.country}</h2>
-          <div className="grid grid-cols-3 gap-4 text-center">
-            <div className="p-2">
-              <p className="text-md">Temperature</p>
-              <p className="text-lg font-semibold">{weatherData.current.temp.toFixed(1)}°F</p>
-            </div>
-            <div className="p-2">
-              <p className="text-md">Humidity</p>
-              <p className="text-lg font-semibold">{weatherData.current.humidity}%</p>
-            </div>
-            <div className="p-2">
-              <p className="text-md">Wind</p>
-              <p className="text-lg font-semibold">{weatherData.current.wind_speed.toFixed(1)} mph</p>
-            </div>
-          </div>
-          <div className="mt-6">
-            <h2 className="text-xl font-semibold text-center mb-4">7 Day Forecast</h2>
-            <div className="grid grid-cols-4 text-center border-b-2 py-2 font-bold">
-              <p>Date</p>
-              <p>Day High/Night Low</p>
-              <p>Wind</p>
-              <p>Humidity</p>
-            </div>
-            {weatherData.daily.map((day, index) => (
-              <div key={index} className="grid grid-cols-4 text-center border-b-2 py-2">
-                <p>{new Date(day.dt * 1000).toLocaleDateString()}</p>
-                <p>{day.temp.day.toFixed(0)}°F / {day.temp.night.toFixed(0)}°F</p>
-                <p>{day.wind_speed.toFixed(1)} mph</p>
-                <p>{day.humidity}%</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <p>Loading...</p>
-      )}
+      <CurrentWeather weatherData={weatherData} locationInfo={locationInfo} />
+      <ForecastComponent weatherData={weatherData} />
     </div>
   );
 };
