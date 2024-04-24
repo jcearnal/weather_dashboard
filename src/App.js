@@ -1,14 +1,17 @@
 import React from 'react';
-import WeatherDisplay from './components/WeatherDisplay';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ProtectedWeatherDisplay from './components/ProtectedWeatherDisplay';
+import HomeComponent from './components/HomeComponent';
+import './index.css';
 
 function App() {
-  // Log the API key to the console
-  // console.log('API Key from .env:', process.env.REACT_APP_OPENWEATHERMAP_API_KEY);
-
   return (
-    <div className="App">      
-      <WeatherDisplay lat="40.7128" lon="-74.0060" /> {/* Example coordinates for New York */}
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/weather" element={<ProtectedWeatherDisplay />} />
+        <Route path="/" element={<HomeComponent />} />
+      </Routes>
+    </Router>
   );
 }
 
