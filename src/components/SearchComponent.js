@@ -1,25 +1,19 @@
-import React, { useState } from 'react';
-import { fetchWeather } from '../api/weatherAPI';
+import React from 'react';
 
-const SearchComponent = ({ setWeatherData }) => {
-  const [city, setCity] = useState('');
-
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    const data = await fetchWeather(city);
-    setWeatherData(data);
-  };
-
+const SearchComponent = ({ onSearch, locationQuery, setLocationQuery }) => {
   return (
-    <form onSubmit={handleSearch}>
+    <div className="text-center my-4">
       <input
         type="text"
-        value={city}
-        onChange={(e) => setCity(e.target.value)}
-        placeholder="Enter city"
+        value={locationQuery}
+        onChange={(e) => setLocationQuery(e.target.value)}
+        placeholder="Enter City, State, Country"
+        className="border-2 border-gray-300 p-2 rounded"
       />
-      <button type="submit">Search</button>
-    </form>
+      <button onClick={() => onSearch(locationQuery)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        Go
+      </button>
+    </div>
   );
 };
 
