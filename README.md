@@ -20,6 +20,19 @@ The Open Weather Dashboard is a comprehensive weather tracking application that 
 - **Firebase Authentication**: Provides a secure authentication system, currently supporting sign-in with Google. This is required for managing favorite locations.
 - **OpenWeatherMap API**: External API used to fetch current weather data and forecasts. OpenWeatherMap's GeoCoding API is used perform reverse geocoding based on location inputs.
 
+## Project Dependencies
+
+This project uses the following dependencies:
+
+- **React**: A JavaScript library for building user interfaces.
+- **Tailwind CSS**: A utility-first CSS framework for rapid UI development.
+- **Firebase**: A platform developed by Google for creating mobile and web applications.
+  - `firebase/auth`: For authentication services.
+  - `firebase/database`: For real-time database services.
+  - `firebase/firestore`: For cloud firestore services.
+- **axios**: Promise based HTTP client for the browser and node.js.
+- **react-router-dom**: DOM bindings for React Router.
+
 ## Authentication
 
 To access personalized features such as managing favorite locations, users need to sign in using their Google accounts. This integration ensures that each user's data is securely managed and personalized.
