@@ -6,13 +6,16 @@ import { fetchWeatherData } from '../api/weatherService';
 const FavoritesComponent = ({ favorites, setFavorites, setWeatherData, setLocationInfo, weatherData, locationInfo }) => {
   const { currentUser } = useAuth();
 
+  // Adds a location to the favorites in Firebase if it's not already there
   const addToFavorites = async () => {
     const db = getDatabase();
     const favRef = ref(db, `users/${currentUser.uid}/favorites`);
   
+    // Check if the location is already marked as favorite
     const isDuplicate = favorites.some(fav =>
       fav.lat === weatherData.lat && fav.lon === weatherData.lon);
   
+    // Add new favorite to Firebase and update locally via listener
     if (!isDuplicate && weatherData && locationInfo) {
       const newFavRef = push(favRef);
       const newFavorite = {
@@ -24,13 +27,13 @@ const FavoritesComponent = ({ favorites, setFavorites, setWeatherData, setLocati
         key: newFavRef.key
       };
   
-      // Push to Firebase and let onValue listener handle the state update
       await set(newFavRef, newFavorite);
     } else {
       alert("This location is already in your favorites or data is missing.");
     }
   };
 
+  // Deletes a favorite from Firebase and updates local state
   const deleteFavorite = async (favorite) => {
     if (!favorite.key) {
       alert("No key found for the favorite, can't delete.");
@@ -49,6 +52,7 @@ const FavoritesComponent = ({ favorites, setFavorites, setWeatherData, setLocati
     }
   };
 
+  // Fetches and updates weather data for a specific favorite location
   const loadFavoriteWeather = async (favorite) => {
     try {
       const weather = await fetchWeatherData(favorite.lat, favorite.lon);

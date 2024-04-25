@@ -1,27 +1,27 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext'; 
-import { FavoritesProvider } from './context/FavoritesContext'; 
-import Header from './components/Header';
-import Footer from './components/Footer';
-import HomeComponent from './components/HomeComponent';
-import ProtectedWeatherDisplay from './components/ProtectedWeatherDisplay';
-import GoogleSignInComponent from './components/GoogleSignInComponent';
+import { AuthProvider } from './context/AuthContext'; // Provides user authentication context
+import { FavoritesProvider } from './context/FavoritesContext'; // Provides favorites context
+import Header from './components/Header'; // Displays the top navigation bar
+import Footer from './components/Footer'; // Displays the footer
+import HomeComponent from './components/HomeComponent'; // Landing page component
+import ProtectedWeatherDisplay from './components/ProtectedWeatherDisplay'; // Weather display requiring authentication
+import GoogleSignInComponent from './components/GoogleSignInComponent'; // Google sign-in component
 
 function App() {
     return (
-        <Router>
-            <AuthProvider> 
-                <FavoritesProvider> 
-                    <Header />
+        <Router> {/* React Router for handling routing */}
+            <AuthProvider> {/* Context provider for auth state */}
+                <FavoritesProvider> {/* Context provider for managing favorites */}
+                    <Header /> {/* Site header */}
                     <div className="min-h-screen">
-                        <Routes>
-                            <Route path="/weather" element={<ProtectedWeatherDisplay />} />
-                            <Route path="/signin" element={<GoogleSignInComponent />} />
-                            <Route path="/" element={<HomeComponent />} />
+                        <Routes> {/* Route management for navigation */}
+                            <Route path="/weather" element={<ProtectedWeatherDisplay />} /> {/* Protected route for weather display */}
+                            <Route path="/signin" element={<GoogleSignInComponent />} /> {/* Route for Google sign-in */}
+                            <Route path="/" element={<HomeComponent />} /> {/* Default route to home page */}
                         </Routes>
                     </div>
-                    <Footer />
+                    <Footer /> {/* Site footer */}
                 </FavoritesProvider>
             </AuthProvider>
         </Router>

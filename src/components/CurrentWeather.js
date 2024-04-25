@@ -1,11 +1,13 @@
 const CurrentWeather = ({ weatherData, locationInfo }) => {
-    if (!weatherData) return null; // Ensure weather data is available before rendering
+    // Checks if weather data is available before attempting to render the component
+    if (!weatherData) return null; 
 
-    // Determine the icon URL based on the weather condition code
+    // Constructs URL for the weather icon based on the weather code received from API
     const iconUrl = weatherData.current.weather[0].icon
       ? `https://openweathermap.org/img/wn/${weatherData.current.weather[0].icon}@2x.png`
       : '';
 
+    // Calculates the chance of precipitation if available, otherwise sets it to 0
     const precipitationChance = weatherData.current.pop ? (weatherData.current.pop * 100).toFixed(0) : 0;
 
     return (
@@ -16,9 +18,9 @@ const CurrentWeather = ({ weatherData, locationInfo }) => {
         <div className="flex justify-center items-center text-center mb-4">
           <img src={iconUrl} alt="Weather icon" />
         </div>
-        <div className="grid grid-cols-4 gap-4 text-center">
+        <div className="grid grid-cols-4 gap-2 text-center">
           <div className="p-2">
-            <p className="text-md">Temperature</p>
+            <p className="text-md">Temp</p>
             <p className="text-lg font-semibold">{weatherData.current.temp.toFixed(1)}°F</p>
           </div>
           <div className="p-2">
@@ -26,7 +28,7 @@ const CurrentWeather = ({ weatherData, locationInfo }) => {
             <p className="text-lg font-semibold">{weatherData.current.humidity}%</p>
           </div>
           <div className="p-2">
-            <p className="text-md">Precipitation</p>
+            <p className="text-md">Precip.</p>
             <p className="text-lg font-semibold">{precipitationChance}%</p>
           </div>
           <div className="p-2">
@@ -35,7 +37,7 @@ const CurrentWeather = ({ weatherData, locationInfo }) => {
           </div>
         </div>
         <p className="text-center mt-4 font-medium">
-          Expect a day of {weatherData.current.weather[0].description}.
+          Summary: Expect a day of {weatherData.current.weather[0].description}.
         </p>
       </div>
     );

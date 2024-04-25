@@ -4,18 +4,19 @@ import { useAuth } from '../context/AuthContext';
 import SearchComponent from './SearchComponent';
 import CurrentWeather from './CurrentWeather';
 import ForecastComponent from './ForecastComponent';
-import FavoritesComponent from './FavoritesComponent';  // Make sure this is imported
+import FavoritesComponent from './FavoritesComponent'; 
 import { fetchWeatherData } from '../api/weatherService';
 import { fetchGeocodeData, fetchReverseGeocodeData } from '../api/geocodeService';
 
 const WeatherDisplay = () => {
-  const { currentUser } = useAuth();
+  const { currentUser } = useAuth(); // Access current user from context
   const [weatherData, setWeatherData] = useState(null);
   const [locationQuery, setLocationQuery] = useState('');
   const [locationInfo, setLocationInfo] = useState({ name: 'Unknown', state: 'Location', country: '' });
-  const [favorites, setFavorites] = useState([]);  // This should define favorites
+  const [favorites, setFavorites] = useState([]); // State for storing user's favorite locations
   const [error, setError] = useState('');
 
+  // Listen to changes in user's favorites in the Firebase database
   useEffect(() => {
     if (currentUser) {
       const db = getDatabase();
@@ -29,11 +30,8 @@ const WeatherDisplay = () => {
     }
   }, [currentUser]);
 
-  const handleSearch = (query) => {
-    fetchDataByLocation(query);
-  };
-
-  const handleUseCurrentLocation = () => {
+  // Handler for fetching weather data based on browser's geolocation
+  const handleUseCurrentLocation = async () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(async (position) => {
         const { latitude, longitude } = position.coords;
@@ -59,6 +57,7 @@ const WeatherDisplay = () => {
     }
   };
 
+  // Fetch weather data based on the manually entered location
   const fetchDataByLocation = async (query) => {
     setError('');
     try {
@@ -74,6 +73,7 @@ const WeatherDisplay = () => {
     }
   };
 
+  // Update weather and location information in the state
   const updateWeatherAndLocation = async (lat, lon, geocodeData = null) => {
     try {
       const weather = await fetchWeatherData(lat, lon);
@@ -90,15 +90,15 @@ const WeatherDisplay = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <center><h1 className="text-3xl font-bold my-2">Weather Forecast</h1></center>
+    <div className="max-w-4xl mx-auto p-4">
+      <h1 className="text-3xl font-bold text-center my-2">Weather Forecast</h1>
       <SearchComponent
-        onSearch={(query) => fetchDataByLocation(query)}
+        onSearch={fetchDataByLocation}
         locationQuery={locationQuery}
         setLocationQuery={setLocationQuery}
-        onUseCurrentLocation={() => handleUseCurrentLocation()}
-      />      
-      {error && <p className="text-red-500">{error}</p>}
+        onUseCurrentLocation={handleUseCurrentLocation}
+      />
+      {error && <p className="text-red-500 text-center">{error}</p>}
       <CurrentWeather weatherData={weatherData} locationInfo={locationInfo} />
       <ForecastComponent weatherData={weatherData} />
       <FavoritesComponent
