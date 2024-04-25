@@ -28,8 +28,8 @@ To access personalized features such as managing favorite locations, users need 
 
 1. **Clone the repository:**
    ```bash
-   git clone https://example.com/your-repository.git
-   cd your-repository
+   git clone https://github.com/jcearnal/weather_dashboard.git
+   cd weather_dashboard
 
 2. **Install Dependencies:**
    ```bash
