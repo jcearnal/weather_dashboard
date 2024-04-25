@@ -2,7 +2,7 @@
 
 The Open Weather Dashboard is a comprehensive weather tracking application that allows users to get real-time weather updates, forecasts, and manage their favorite locations. This project serves to meet the requirements for my INF 655 Final Project.
 
-![dash_screenshot](https://github.com/jcearnal/weather_dashboard/assets/71468973/8ced2cb4-691d-481e-8a49-b4169c0fea94)
+![dash_screenshot](https://github.com/jcearnal/weather_dashboard/assets/71468973/2d2a1759-21d3-4de9-8d74-9443b47321fc)
 
 ## Features
 
