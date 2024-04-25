@@ -2,6 +2,8 @@
 
 The Open Weather Dashboard is a comprehensive weather tracking application that allows users to get real-time weather updates, forecasts, and manage their favorite locations. This project serves to meet the requirements for my INF 655 Final Project.
 
+![Screenshot of Application](/public/dash_screenshot.png.jpg)
+
 ## Features
 
 - **Current Weather Display**: Shows real-time weather conditions including temperature, humidity, wind speed, and a daily summary.
