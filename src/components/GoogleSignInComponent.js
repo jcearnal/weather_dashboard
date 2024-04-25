@@ -1,7 +1,7 @@
 import React from 'react';
 import { signInWithGoogle } from '../utils/authService'; // adjust path as necessary
 
-const SignInComponent = () => {
+const GoogleSignInComponent = () => {
     const handleGoogleSignIn = async () => {
         try {
             await signInWithGoogle();
@@ -18,4 +18,4 @@ const SignInComponent = () => {
     );
 };
 
-export default SignInComponent;
+export default GoogleSignInComponent;
