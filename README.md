@@ -1,6 +1,6 @@
 # Open Weather Dashboard
 
-The Open Weather Dashboard is a comprehensive weather tracking application that allows users to get real-time weather updates, forecasts, and manage their favorite locations. This project serves to meet the requirements for my INF 655 Final Project.
+The Open Weather Dashboard is a comprehensive weather tracking application that allows users to get real-time weather updates, forecasts, and manage their favorite locations. This project serves to meet the requirements for my INF 655 Final Project. The application is deployed to Firebase at the following URL: [https://weather-dashboard-48e21.firebaseapp.com/weather](https://weather-dashboard-48e21.firebaseapp.com/weather).
 
 ![dash_screenshot](https://github.com/jcearnal/weather_dashboard/assets/71468973/2d2a1759-21d3-4de9-8d74-9443b47321fc)
 
